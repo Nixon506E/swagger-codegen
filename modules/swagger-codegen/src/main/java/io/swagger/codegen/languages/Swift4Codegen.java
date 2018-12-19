@@ -55,6 +55,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
     public static final String POD_SCREENSHOTS = "podScreenshots";
     public static final String POD_DOCUMENTATION_URL = "podDocumentationURL";
     public static final String SWIFT_USE_API_NAMESPACE = "swiftUseApiNamespace";
+    public static final String USE_REALM = "useRealm";
     public static final String DEFAULT_POD_AUTHORS = "Swagger Codegen";
     public static final String LENIENT_TYPE_CAST = "lenientTypeCast";
     protected static final String LIBRARY_PROMISE_KIT = "PromiseKit";
@@ -65,6 +66,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
     protected boolean objcCompatible = false;
     protected boolean lenientTypeCast = false;
     protected boolean swiftUseApiNamespace;
+    protected boolean useRealm = false;
     protected String[] responseAs = new String[0];
     protected String sourceFolder = "Classes" + File.separator + "Swaggers";
 
@@ -141,7 +143,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
 
                     // Added for Objective-C compatibility
                     "id", "description", "NSArray", "NSURL", "CGFloat", "NSSet", "NSString", "NSInteger", "NSUInteger",
-                    "NSError", "NSDictionary", 
+                    "NSError", "NSDictionary",
 
                     //
                     // Swift keywords. This list is taken from here:
@@ -240,6 +242,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
         cliOptions.add(new CliOption(SWIFT_USE_API_NAMESPACE,
                                      "Flag to make all the API classes inner-class "
                                      + "of {{projectName}}API"));
+        cliOptions.add(CliOption.newBoolean(USE_REALM, "Use Realm"));
         cliOptions.add(new CliOption(CodegenConstants.HIDE_GENERATION_TIMESTAMP,
                                      CodegenConstants.HIDE_GENERATION_TIMESTAMP_DESC)
                 .defaultValue(Boolean.TRUE.toString()));
@@ -298,6 +301,10 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
             setSwiftUseApiNamespace(convertPropertyToBooleanAndWriteBack(SWIFT_USE_API_NAMESPACE));
         }
 
+        if (additionalProperties.containsKey(USE_REALM)) {
+            setUseRealm(convertPropertyToBooleanAndWriteBack(USE_REALM));
+        }
+
         if (!additionalProperties.containsKey(POD_AUTHORS)) {
             additionalProperties.put(POD_AUTHORS, DEFAULT_POD_AUTHORS);
         }
@@ -344,6 +351,13 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
                                                "",
                                                ".gitignore"));
 
+        if (useRealm) {
+            importMapping.put("IgnoredKey", "io.realm.annotations.IgnoredKey");
+            importMapping.put("IndexedKey", "io.realm.annotations.IndexedKey");
+            importMapping.put("PrimaryKey", "io.realm.annotations.PrimaryKey");
+            importMapping.put("RealmClass", "io.realm.annotations.RealmClass");
+            importMapping.put("RealmModel", "io.realm.RealmModel");
+        }
     }
 
     @Override
@@ -611,6 +625,10 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
         this.swiftUseApiNamespace = swiftUseApiNamespace;
     }
 
+    public void setUseRealm(boolean useRealm) {
+        this.useRealm = useRealm;
+    }
+
     @Override
     public String toEnumValue(String value, String datatype) {
         return String.valueOf(value);
@@ -758,6 +776,23 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
             // properties in case we want to put special code in the templates
             // which provide Objective-C compatibility.
             property.vendorExtensions.put("x-swift-optional-scalar", true);
+        }
+
+        if (useRealm && model.vendorExtensions.containsKey("x-realm-model")) {
+            model.imports.add("RealmModel");
+            model.imports.add("RealmClass");
+        }
+        if (useRealm && property.vendorExtensions.containsKey("x-primary-key")) {
+            model.imports.add("PrimaryKey");
+        }
+        if (useRealm && property.vendorExtensions.containsKey("x-indexed-key")) {
+            model.imports.add("IndexedKey");
+        }
+        if (useRealm && property.vendorExtensions.containsKey("x-ignored-key")) {
+            model.imports.add("IgnoredKey");
+        }
+        if (property.required) {
+            model.imports.add("NonNull");
         }
     }
 
