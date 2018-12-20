@@ -351,6 +351,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
                                                "",
                                                ".gitignore"));
 
+        importMapping.put("EnumName", "io.enum.annotations.EnumName");
         if (useRealm) {
             importMapping.put("IgnoredKey", "io.realm.annotations.IgnoredKey");
             importMapping.put("IndexedKey", "io.realm.annotations.IndexedKey");
@@ -776,6 +777,10 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
             // properties in case we want to put special code in the templates
             // which provide Objective-C compatibility.
             property.vendorExtensions.put("x-swift-optional-scalar", true);
+        }
+
+        if (model.vendorExtensions.containsKey("x-enum-name")) {
+            model.imports.add("EnumName");
         }
 
         if (useRealm && model.vendorExtensions.containsKey("x-realm-model")) {
