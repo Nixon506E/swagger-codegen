@@ -166,7 +166,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
                     "#imageLiteral", "#line", "#selector", "#sourceLocation",
                     // Keywords reserved in particular contexts
                     "associativity", "convenience", "dynamic", "didSet", "final", "get", "infix", "indirect", "lazy", "left",
-                    "mutating", "none", "nonmutating", "optional", "override", "postfix", "precedence", "prefix", "Protocol",
+                    "mutating", /*"none",*/ "nonmutating", "optional", "override", "postfix", "precedence", "prefix", "Protocol",
                     "required", "right", "set", "Type", "unowned", "weak", "willSet",
 
                     //
@@ -487,10 +487,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
       if (p instanceof StringProperty) {
           StringProperty dp = (StringProperty) p;
           if (dp.getDefault() != null) {
-              if (Pattern.compile("\r\n|\r|\n").matcher(dp.getDefault()).find())
-                  return "'''" + dp.getDefault() + "'''";
-              else
-                  return "'" + dp.getDefault() + "'";
+              return '"' + dp.getDefault() + '"';
           }
       } else if (p instanceof BooleanProperty) {
           BooleanProperty dp = (BooleanProperty) p;
