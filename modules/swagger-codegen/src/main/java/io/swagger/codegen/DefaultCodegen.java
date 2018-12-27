@@ -269,7 +269,7 @@ public class DefaultCodegen {
     }
 
     /**
-     * Returns the common prefix of variables for enum naming if 
+     * Returns the common prefix of variables for enum naming if
      * two or more variables are present
      *
      * @param vars List of variable names

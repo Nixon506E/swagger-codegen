@@ -102,6 +102,9 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
      */
     public Swift4Codegen() {
         super();
+
+        supportsInheritance = true;
+
         outputFolder = "generated-code" + File.separator + "swift";
         modelTemplateFiles.put("model.mustache", ".swift");
         apiTemplateFiles.put("api.mustache", ".swift");
