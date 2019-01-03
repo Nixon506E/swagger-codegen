@@ -194,7 +194,7 @@ public class DefaultCodegen {
                 }
             }
             // Let parent know about all its children
-            for (String name : allModels.keySet()) {
+            /*for (String name : allModels.keySet()) {
                 CodegenModel cm = allModels.get(name);
                 CodegenModel parent = allModels.get(cm.parent);
                 // if a discriminator exists on the parent, don't add this child to the inheritance hierarchy
@@ -210,7 +210,7 @@ public class DefaultCodegen {
                         parent = null;
                     }
                 }
-            }
+            }*/
         }
         return objs;
     }

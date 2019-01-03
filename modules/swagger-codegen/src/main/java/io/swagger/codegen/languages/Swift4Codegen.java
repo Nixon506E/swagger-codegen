@@ -821,6 +821,10 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
             property.vendorExtensions.put("x-swift-optional-scalar", true);
         }
 
+        if (model.discriminator != null && model.discriminator.equals(property.name)) {
+            property.isDiscriminator = true;
+        }
+
         if (model.vendorExtensions.containsKey("x-enum-name")) {
             model.imports.add("EnumName");
         }
