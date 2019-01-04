@@ -881,16 +881,17 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
             Iterator<CodegenProperty> iterator = codegenProperties.iterator();
             while (iterator.hasNext()) {
                 CodegenProperty codegenProperty = iterator.next();
-                if (codegenProperty.baseName == parentModelCodegenProperty.baseName) {
+                if (codegenProperty.baseName.equals(parentModelCodegenProperty.baseName)) {
                     // We found a property in the child class that is
                     // a duplicate of the one in the parent, so remove it.
-                    iterator.remove();
-                    removedChildProperty = true;
+                    //iterator.remove();
+                    //removedChildProperty = true;
+                    codegenProperty.overridesParent = true;
                 }
             }
         }
 
-        if (removedChildProperty) {
+        /*if (removedChildProperty) {
             // If we removed an entry from this model's vars, we need to ensure hasMore is updated
             int count = 0;
             int numVars = codegenProperties.size();
@@ -899,7 +900,7 @@ public class Swift4Codegen extends DefaultCodegen implements CodegenConfig {
                 codegenProperty.hasMore = (count < numVars) ? true : false;
             }
             codegenModel.vars = codegenProperties;
-        }
+        }*/
 
 
         return codegenModel;

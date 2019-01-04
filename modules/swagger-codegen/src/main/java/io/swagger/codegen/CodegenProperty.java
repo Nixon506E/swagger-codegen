@@ -51,6 +51,7 @@ public class CodegenProperty implements Cloneable {
     public boolean isInherited;
     public String discriminatorValue;
     public boolean isDiscriminator;
+    public boolean overridesParent;
     public String nameInCamelCase; // property name in camel case
     // enum name based on the property name, usually use as a prefix (e.g. VAR_NAME) for enum name (e.g. VAR_NAME_VALUE1)
     public String enumName;
@@ -135,6 +136,7 @@ public class CodegenProperty implements Cloneable {
         result = prime * result + Objects.hashCode(isInherited);
         result = prime * result + Objects.hashCode(discriminatorValue);
         result = prime * result + Objects.hashCode(isDiscriminator);
+        result = prime * result + Objects.hashCode(overridesParent);
         result = prime * result + Objects.hashCode(nameInCamelCase);
         result = prime * result + Objects.hashCode(enumName);
         result = prime * result + ((maxItems == null) ? 0 : maxItems.hashCode());
@@ -320,6 +322,9 @@ public class CodegenProperty implements Cloneable {
             return false;
         }
         if (!Objects.equals(this.isDiscriminator, other.isDiscriminator)) {
+            return false;
+        }
+        if (!Objects.equals(this.overridesParent, other.overridesParent)) {
             return false;
         }
         if (!Objects.equals(this.nameInCamelCase, other.nameInCamelCase)) {
